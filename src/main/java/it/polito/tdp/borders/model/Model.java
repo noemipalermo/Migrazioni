@@ -19,6 +19,7 @@ public class Model {
 	private Graph<Country, DefaultEdge> graph;
 	private Map<Integer, Country> countriesMap;
 
+	private int nPassiSim;
 	public Model() {
 		this.countriesMap = new HashMap<>();
 	}
@@ -60,4 +61,18 @@ public class Model {
 		return null;
 
 	}
+
+	public Map<Country, Integer> simulaMigrazione(Country partenza) {
+		Simulator sim = new Simulator(this.graph, partenza) ;
+		sim.initialize() ;
+		sim.run() ;
+		this.nPassiSim = sim.getnPassi();
+		return sim.getStanziali();
+	}
+
+	public int getnPassiSim() {
+		return nPassiSim;
+	}
+	
+	
 }

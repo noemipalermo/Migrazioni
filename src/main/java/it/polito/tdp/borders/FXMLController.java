@@ -5,7 +5,10 @@
 package it.polito.tdp.borders;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.borders.model.Country;
@@ -44,8 +47,13 @@ public class FXMLController {
 			int anno = Integer.parseInt(annoS);
 
 			model.creaGrafo(anno);
+			
+			// nella tendina, metto le nazioni in ordine alfabetico
+			// p.s. uso una "lambda function" come secondo parametro di "sort"
+			List<Country> sortedCountries = new ArrayList<>(this.model.getCountries()) ;
+			Collections.sort(sortedCountries, (a,b)->a.getStateName().compareTo(b.getStateName()));
 
-			boxNazione.getItems().addAll(this.model.getCountries());
+			boxNazione.getItems().addAll(sortedCountries);
 
 			// calcola numero di confini
 			List<CountryAndNumber> result = model.getCountryAndNumbers();
@@ -62,6 +70,22 @@ public class FXMLController {
 
 	@FXML
 	void doSimula(ActionEvent event) {
+		Country partenza = boxNazione.getValue() ;
+		if(partenza==null) {
+			txtResult.appendText("Errore: devi selezionare una nazione\n");
+			return ;
+		}
+		
+		Map<Country, Integer> stanziali = model.simulaMigrazione(partenza) ;
+		
+		txtResult.setText("Migrazioni partendo da: "+partenza.getStateName()+"\n");
+		for(Country c: stanziali.keySet()) {
+			int num = stanziali.get(c) ;
+			if(num>0)
+				txtResult.appendText(" > "+c.getStateAbb()+" : "+num+"\n");
+		}
+		
+		this.txtResult.appendText("Passi di simulazione : "+model.getnPassiSim());
 
 	}
 

@@ -97,7 +97,7 @@ public class BordersDAO {
 				"from contiguity " +
 				"where year<=? " +
 				"and conttype=1 " +
-				"and state1no < state2no";
+				"and state1no < state2no"; // per non avere coppie simmetriche
 
 		List<Adiacenza> result = new ArrayList<>();
 
